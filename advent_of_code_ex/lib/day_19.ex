@@ -24,12 +24,13 @@ defmodule Day19 do
   end
 
   defp valid?(line, rules) do
-    with {:ok, ""} <- consume(line, rules[0], rules) do
-      true
+    with {:ok, results} <- consume(line, rules[0], rules) do
+      Enum.member?(results, "")
     else
-      _ ->
+      result ->
+        IO.inspect(result)
         false
-        raise line
+        # raise line
     end
   end
 
@@ -37,30 +38,34 @@ defmodule Day19 do
 
   def consume(line, %{type: "literal", value: character}, _rules) do
     case String.starts_with?(line, character) do
-      true -> {:ok, String.slice(line, 1..-1)}
+      true -> {:ok, [String.slice(line, 1..-1)]}
       false -> :invalid
     end
   end
 
   # what if they are unbalanced? << now relevant
   def consume(string, %{type: "relative", possibilities: possibilities}, rules) do
-    Stream.map(possibilities, fn possibility ->
+    IO.inspect(string)
+
+    Enum.flat_map(possibilities, fn possibility ->
       possibility
-      |> Enum.reduce_while(
-        {:ok, string},
-        fn rule_id, {:ok, string} ->
-          case consume(string, rules[rule_id], rules) do
-            {:ok, rest} -> {:cont, {:ok, rest}}
-            :invalid -> {:halt, nil}
-          end
+      |> Enum.reduce(
+        [string],
+        fn rule_id, forks ->
+          forks
+          |> Enum.flat_map(fn fork ->
+            case consume(fork, rules[rule_id], rules) do
+              {:ok, newforks} -> newforks
+              :invalid -> []
+            end
+          end)
         end
       )
+      |> Enum.uniq()
     end)
-    |> Stream.filter(fn value -> value != nil end)
-    |> Enum.take(1)
     |> case do
-      [{:ok, rest}] -> {:ok, rest}
-      _ -> :invalid
+      [] -> :invalid
+      tails -> {:ok, tails}
     end
   end
 

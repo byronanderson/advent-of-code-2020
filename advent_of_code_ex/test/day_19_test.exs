@@ -52,6 +52,7 @@ defmodule Day19Test do
            7: 14 5 | 1 21
            24: 14 1
 
+           aaaaabbaabaaaaababaa
            aaabbbbbbaaaabaababaabababbabaaabbababababaaa
            abbbbbabbbaaaababbaabbbbabababbbabbbbbbabaaaa
            bbabbbbaabaabba
@@ -62,7 +63,6 @@ defmodule Day19Test do
            ababaaaaabbbaba
            baabbaaaabbaaaababbaababb
            abbbbabbbbaaaababbbbbbaaaababb
-           aaaaabbaabaaaaababaa
            aaaabbaaaabbaaa
            aaaabbaabbaaaaaaabbbabbbaaabbaabaaa
            babaaabbbaaabaababbaabababaaab
